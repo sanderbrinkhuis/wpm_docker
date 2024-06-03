@@ -1,11 +1,13 @@
 FROM is-wpm:10.15
-
+ARG WPM_FILE
 WORKDIR /opt/softwareag/wpm
+COPY --chown=sagadmin:sagadmin ${WPM_FILE} /opt/softwareag/wpm/wpm.yml
 
-COPY --chown=sagadmin:sagadmin ~/wmconfig/wpm.yml /opt/softwareag/wpm/wpm.yml
 USER sagadmin
 RUN wpm install -wr public -ws https://packages.webmethods.io WmJDBCAdapter
 RUN wpm install -r customer_git wmp_sample2
 
 WORKDIR /
 # docker build -t is-run:10.15 -f DockerfileRUN .
+
+#docker build --build-arg WPM_FILE=/home/sag/wmconfig/wpm.yml -t is-run:10.15 -f DockerfileRUN .
