@@ -1,10 +1,7 @@
 FROM is-wpm:10.15
 ARG WPM_FILE
 WORKDIR /opt/softwareag/wpm
-
-RUN --mount=type=secret,id=wpmconfig,target=/opt/softwareag/wpm/wpm.yml \
-    cp /opt/softwareag/wpm/wpm.yml /opt/softwareag/wpm/wpm.yml
-RUN chown sagadmin:sagadmin /opt/softwareag/wpm/wpm.yml
+COPY --chown=sagadmin:sagadmin wpm.yml /opt/softwareag/wpm/wpm.yml
 USER sagadmin
 RUN wpm install -wr public -ws https://packages.webmethods.io WmJDBCAdapter
 RUN wpm install -r customer_git wmp_sample2
