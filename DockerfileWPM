@@ -18,4 +18,4 @@ ENV PATH=/opt/softwareag/wpm/bin:$PATH
 # docker system prune -a
 # Use containerd for pulling and storing images (general settings docker desktop)
 # docker build -t is-wpm:10.15 -f DockerfileWPM .
-# docker run -p 9090:9090 -e admin_password=manage -e admin_port=9090 is-wpm:10.15
+# docker run -p 5555:5555 is-wpm:10.15
