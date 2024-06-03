@@ -13,3 +13,4 @@ WORKDIR /
 # docker build -t is-run:10.15 -f DockerfileRUN .
 
 #docker build --build-arg WPM_FILE=/home/sag/wmconfig/wpm.yml -t is-run:10.15 -f DockerfileRUN .
+#docker build --secret id=wpmconfig,src=~/.docker/secrets/wpmconfig -t is-run:10.15 -f DockerfileRUN .
