@@ -2,7 +2,7 @@ FROM is-wpm:10.15
 ARG SAG_TOKEN
 WORKDIR /opt/softwareag/wpm
 COPY --chown=sagadmin:sagadmin wpm.yml /opt/softwareag/wpm/wpm.yml
-COPY --chown=sagadmin:sagadmin lib/mysql-connector-j.jar /opt/softwareag/IntegrationServer/lib
+COPY --chown=sagadmin:sagadmin lib/mysql-connector-j.jar /opt/softwareag/common/lib/ext/mysql-connector-j.jar
 USER sagadmin
 
 RUN wpm install -ws https://packages.webmethods.io -wr softwareag -j ${SAG_TOKEN} WmJDBCAdapter
@@ -17,4 +17,4 @@ WORKDIR /
 # docker build --build-arg="SAG_TOKEN=${SAG_TOKEN}" --no-cache -t is-run:10.15 -f DockerfileRUN .
 #docker run -p 5556:5555 is-run:10.15
 
-#docker run -d --name is -p 5556:5555 -v /mnt/sag/repos/config/customapp.properties:/opt/data/customapp.properties -e SAG_IS_CONFIG_PROPERTIES=/opt/data/customapp.properties is-run:10.15
+#docker run -d --name is -p 5556:5555 -v /mnt/sag/repos/wpm_docker/customapp.properties:/opt/data/customapp.properties -e SAG_IS_CONFIG_PROPERTIES=/opt/data/customapp.properties is-run:10.15
