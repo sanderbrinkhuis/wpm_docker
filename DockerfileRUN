@@ -2,7 +2,7 @@ FROM is-wpm:10.15
 ARG SAG_TOKEN
 WORKDIR /opt/softwareag/wpm
 COPY --chown=sagadmin:sagadmin wpm.yml /opt/softwareag/wpm/wpm.yml
-COPY --chown=sagadmin:sagadmin lib/mysql-connector-java-5.1.46.jar /opt/softwareag/common/lib/ext/mysql-connector-java-5.1.46.jar
+COPY --chown=sagadmin:sagadmin ./lib/mysql-connector-java-5.1.46.jar /opt/softwareag/common/lib/ext/mysql-connector-java-5.1.46.jar
 RUN chmod+X /opt/softwareag/common/lib/ext/mysql-connector-java-5.1.46.jar
 USER sagadmin
 
