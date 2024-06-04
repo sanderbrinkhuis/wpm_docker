@@ -15,3 +15,5 @@ WORKDIR /
 # check echo $SAG_TOKEN
 # docker build --build-arg="SAG_TOKEN=${SAG_TOKEN}" --no-cache -t is-run:10.15 -f DockerfileRUN .
 #docker run -p 5556:5555 is-run:10.15
+
+#docker run -d --name is -p 5556:5555 -v /mnt/sag/repos/config/customapp.properties:/opt/data/customapp.properties -e SAG_IS_CONFIG_PROPERTIES=/opt/data/customapp.properties is-run:10.15
