@@ -3,7 +3,7 @@ ARG WPM_FILE
 WORKDIR /opt/softwareag/wpm
 COPY --chown=sagadmin:sagadmin wpm.yml /opt/softwareag/wpm/wpm.yml
 USER sagadmin
-RUN wpm install -wr public -ws https://packages.webmethods.io WmJDBCAdapter
+RUN wpm install -wr sag -ws softwareag WmJDBCAdapter
 RUN wpm install -r customer_git wmp_sample2
 
 RUN rm /opt/softwareag/wpm/wpm.yml # delete the files since it contains credentials
