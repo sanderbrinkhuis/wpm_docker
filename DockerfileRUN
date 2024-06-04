@@ -2,7 +2,7 @@ FROM is-wpm:10.15
 ARG SAG_TOKEN
 WORKDIR /opt/softwareag/wpm
 COPY --chown=sagadmin:sagadmin wpm.yml /opt/softwareag/wpm/wpm.yml
-COPY --chown=sagadmin:sagadmin lib/mysql-connector-j.jar /opt/softwareag/common/lib/ext/mysql-connector-j.jar
+COPY --chown=sagadmin:sagadmin lib/mysql-connector-java-5.1.46.jar /opt/softwareag/common/lib/ext/lib/mysql-connector-java-5.1.46.jar
 USER sagadmin
 
 RUN wpm install -ws https://packages.webmethods.io -wr softwareag -j ${SAG_TOKEN} WmJDBCAdapter
