@@ -1,6 +1,27 @@
+ARG TRUSTSTORE_PASSWORD=changeit
+
 FROM --platform=linux/amd64 sagcr.azurecr.io/webmethods-microservicesruntime:10.15.0.10-ubi
 
 ADD --chown=sagadmin:sagadmin wpm /opt/softwareag/wpm
-
 ENV PATH=/opt/softwareag/wpm/bin:$PATH
+# prepare certs etc
+
+USER sagadmin
+
+# Add necessary CA bundles
+ADD  --chown=sagadmin:sagadmin https://s3.amazonaws.com/rds-downloads/rds-combined-ca-bundle.pem /tmp/ssl/certs/rds-combined-ca-bundle.pem
+ADD  --chown=sagadmin:sagadmin https://truststore.pki.rds.amazonaws.com/global/global-bundle.pem /tmp/ssl/certs/aws-global.pem
+
+# Set environment variable for truststore password
+ARG TRUSTSTORE_PASSWORD
+ENV TRUSTSTORE_PASSWORD=${TRUSTSTORE_PASSWORD}
+
+# Create and import certificates into the truststore
+RUN keytool -import -trustcacerts -file /tmp/ssl/certs/rds-combined-ca-bundle.pem -alias rds-combined -storepass "${TRUSTSTORE_PASSWORD}" -keystore /opt/softwareag/custom_truststore.jks -noprompt && \
+    keytool -import -trustcacerts -file /tmp/ssl/certs/aws-global.pem -alias aws-global -storepass "${TRUSTSTORE_PASSWORD}" -keystore /opt/softwareag/custom_truststore.jks -noprompt
+
+# Import truststore into the default cacerts
+RUN keytool -importkeystore -srckeystore /opt/softwareag/custom_truststore.jks -srcstorepass "${TRUSTSTORE_PASSWORD}" -destkeystore "$JAVA_HOME/lib/security/cacerts" -deststorepass changeit -noprompt
+
+
 
