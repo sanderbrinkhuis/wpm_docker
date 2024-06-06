@@ -1,27 +1,42 @@
+# Define build arguments for truststore password
 ARG TRUSTSTORE_PASSWORD=changeit
 
+# Use the specified base image
 FROM --platform=linux/amd64 sagcr.azurecr.io/webmethods-microservicesruntime:10.15.0.10-ubi
+# install temp tools
+USER root
+RUN microdnf install openssl -y
 
+# Add the application files and set PATH
 ADD --chown=sagadmin:sagadmin wpm /opt/softwareag/wpm
 ENV PATH=/opt/softwareag/wpm/bin:$PATH
-# prepare certs etc
 
-USER sagadmin
 
-# Add necessary CA bundles
-ADD  --chown=sagadmin:sagadmin https://s3.amazonaws.com/rds-downloads/rds-combined-ca-bundle.pem /tmp/ssl/certs/rds-combined-ca-bundle.pem
-ADD  --chown=sagadmin:sagadmin https://truststore.pki.rds.amazonaws.com/global/global-bundle.pem /tmp/ssl/certs/aws-global.pem
+# Switch to non-root user
 
 # Set environment variable for truststore password
 ARG TRUSTSTORE_PASSWORD
 ENV TRUSTSTORE_PASSWORD=${TRUSTSTORE_PASSWORD}
+# get necessary CA bundles and put them in /tmp/ssl/certs/
+ADD --chown=sagadmin:sagadmin https://s3.amazonaws.com/rds-downloads/rds-combined-ca-bundle.pem /tmp/ssl/certs/rds-combined-ca-bundle.pem
+#ADD --chown=sagadmin:sagadmin https://truststore.pki.rds.amazonaws.com/global/global-bundle.pem /tmp/ssl/certs/aws-global.pem
 
-# Create and import certificates into the truststore
-RUN keytool -import -trustcacerts -file /tmp/ssl/certs/rds-combined-ca-bundle.pem -alias rds-combined -storepass "${TRUSTSTORE_PASSWORD}" -keystore /opt/softwareag/custom_truststore.jks -noprompt && \
-    keytool -import -trustcacerts -file /tmp/ssl/certs/aws-global.pem -alias aws-global -storepass "${TRUSTSTORE_PASSWORD}" -keystore /opt/softwareag/custom_truststore.jks -noprompt
+# Split and import certificates from all PEM files in /tmp/ssl/certs/ into the truststore
+RUN mkdir -p /tmp/ssl/split-certs && \
+    for PEM in /tmp/ssl/certs/*.pem; do \
+        awk 'split_after == 1 {n++;split_after=0} /-----END CERTIFICATE-----/ {split_after=1}{print > ("/tmp/ssl/split-certs/" FILENAME "-" n ".pem")}' < $PEM; \
+    done && \
+    echo "Split files:" && \
+    ls -l /tmp/ssl/split-certs && \
+    for CERT in /tmp/ssl/split-certs/*.pem; do \
+        alias=$(openssl x509 -noout -text -in $CERT | grep -oP '(?<=CN=|CN = ).*'); \
+        echo "Importing $alias from $CERT"; \
+        keytool -import -trustcacerts -file $CERT -alias "$alias" -storepass "${TRUSTSTORE_PASSWORD}" -keystore /opt/softwareag/custom_truststore.jks -noprompt; \
+    done
+
+# List the certificates in the custom truststore to verify
+RUN keytool -list -keystore /opt/softwareag/custom_truststore.jks -storepass "${TRUSTSTORE_PASSWORD}"
+
 
 # Import truststore into the default cacerts
 RUN keytool -importkeystore -srckeystore /opt/softwareag/custom_truststore.jks -srcstorepass "${TRUSTSTORE_PASSWORD}" -destkeystore "$JAVA_HOME/lib/security/cacerts" -deststorepass changeit -noprompt
-
-
-
