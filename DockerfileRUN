@@ -1,21 +1,16 @@
-FROM is-wpm:10.15
+FROM --platform=linux/amd64 is-wpm:10.15
 ARG SAG_TOKEN
 WORKDIR /opt/softwareag/wpm
 COPY --chown=sagadmin:sagadmin wpm.yml /opt/softwareag/wpm/wpm.yml
-COPY --chown=sagadmin:sagadmin ./lib/mysql-connector-java-5.1.46.jar /opt/softwareag/IntegrationServer/lib/jars/mysql-connector-java-5.1.46.jar
+COPY --chown=sagadmin:sagadmin ./lib/mysql-connector-java-5.1.46.jar /opt/softwareag/IntegrationServer/lib/jars/custom/mysql-connector-java-5.1.46.jar
 
 USER sagadmin
 
 RUN wpm install -ws https://packages.webmethods.io -wr softwareag -j ${SAG_TOKEN} WmJDBCAdapter
 
 RUN wpm install -r customer_git wmp_sample2
+RUN wpm install -r bitbucket DMG_Utils
 
 RUN rm /opt/softwareag/wpm/wpm.yml # delete the files since it contains credentials
 WORKDIR /
-# export SAG_TOKEN=<token> in ~/.bashrc 
-# source ~/.bashrc
-# check echo $SAG_TOKEN
-# docker build --build-arg="SAG_TOKEN=${SAG_TOKEN}" --no-cache -t is-run:10.15 -f DockerfileRUN .
-#docker run -p 5556:5555 is-run:10.15
 
-#docker run -d --name is -p 5556:5555 -v /mnt/sag/repos/wpm_docker/customapp.properties:/opt/data/customapp.properties -e SAG_IS_CONFIG_PROPERTIES=/opt/data/customapp.properties is-run:10.15

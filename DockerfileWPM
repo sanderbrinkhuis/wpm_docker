@@ -1,21 +1,6 @@
-FROM sagcr.azurecr.io/webmethods-microservicesruntime:10.15.0.10-ubi
+FROM --platform=linux/amd64 sagcr.azurecr.io/webmethods-microservicesruntime:10.15.0.10-ubi
 
 ADD --chown=sagadmin:sagadmin wpm /opt/softwareag/wpm
 
 ENV PATH=/opt/softwareag/wpm/bin:$PATH
 
-#ENTRYPOINT [ "sh" ]
-#"/opt/softwareag/IntegrationServer/bin/startContainer.sh"
-#startDebugMode.sh 
-
-# docker buildx build --platform linux/amd64 -t is-wpm:10.15 -f DockerfileWPM .
-
-# docker run -dp 5555:5555 --platform linux/amd64 is-wpm:10.15
-# docker run -dp 5555:5555 --platform linux/amd64 is-wpm:10.15
-
-# docker run -dp 5555:5555 --platform linux/amd64 sagcr.azurecr.io/webmethods-microservicesruntime:10.15
-#docker run -it -p 9090:9090 -e admin_password=manage -e admin_port=9090 --platform linux/amd64 is-wpm:10.15
-# docker system prune -a
-# Use containerd for pulling and storing images (general settings docker desktop)
-# docker build -t is-wpm:10.15 -f DockerfileWPM .
-# docker run -p 5555:5555 is-wpm:10.15
