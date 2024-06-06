@@ -11,9 +11,8 @@ RUN microdnf install openssl -y
 ADD --chown=sagadmin:sagadmin wpm /opt/softwareag/wpm
 ENV PATH=/opt/softwareag/wpm/bin:$PATH
 
-
 # Switch to non-root user
-
+USER sagadmin
 # Set environment variable for truststore password
 ARG TRUSTSTORE_PASSWORD
 ENV TRUSTSTORE_PASSWORD=${TRUSTSTORE_PASSWORD}
@@ -33,7 +32,7 @@ RUN mkdir -p /tmp/ssl/split-certs && \
         echo "Importing $alias from $CERT"; \
         keytool -import -trustcacerts -file $CERT -alias "$alias" -storepass "${TRUSTSTORE_PASSWORD}" -keystore /opt/softwareag/custom_truststore.jks -noprompt; \
     done
-
+    
 # List the certificates in the custom truststore to verify
 RUN keytool -list -keystore /opt/softwareag/custom_truststore.jks -storepass "${TRUSTSTORE_PASSWORD}"
 
