@@ -13,3 +13,4 @@ docker build -t is-wpm:10.15 -f DockerfileWPM . --platform=linux/amd64
 docker build --build-arg="SAG_TOKEN=${SAG_TOKEN}" --no-cache -t is-run:10.15 -f DockerfileRUN . --platform=linux/amd64
 
 # docker run -d --name is -p 5556:5555 -v /Users/lennertbrinkhuis/WmGits/wpm_docker/customapp.properties:/opt/data/customapp.properties -e SAG_IS_CONFIG_PROPERTIES=/opt/data/customapp.properties is-run:10.15
+# docker run -d --name is -p 5556:5555 is-run:10.15
