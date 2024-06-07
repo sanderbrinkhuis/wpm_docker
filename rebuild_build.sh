@@ -5,7 +5,7 @@
 #echo <password> | docker login -u sander-brinkhuis-inqdo-com --password-stdin sagcr.azurecr.io
 cd /mnt/sag/repos/wpm_docker/
 aws s3 cp s3://dmg-shared-temp/wpm/customapp.properties .
-docker build -t iswpm:10.15 -f DockerfileWPM . --build-arg TRUSTSTORE_PASSWORD=my_secure_password --progress=plain
+docker build -t is-wpm:10.15 -f DockerfileWPM . --platform=linux/amd64 --build-arg TRUSTSTORE_PASSWORD=changeit --progress=plain
 # no cache because there could be changes in other git repo's used by wpm
 docker build --build-arg="SAG_TOKEN=${SAG_TOKEN}" --no-cache -t isrun:10.15 -f DockerfileRUN .
 docker stop is && docker rm is
