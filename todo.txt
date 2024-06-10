@@ -1,12 +1,15 @@
 TODO: Be able to use customer.properties + licence file from EFS Share in Fargate
+
 TODO: Trigger build from change in Docker repo
 TODO: Correct example repo + connection for Bitbucket
 TODO: Using correct licence file
 TODO: Cloud tenant connection
 TODO: Add AS400 adapter + jars
 TODO: Use DMG credentials + licence for container.softwareag.com and packages.softwareag.com
+TODO: Inqdo essentials -> git add to dockerfile and update properties to point to correct db url
 
 Nive to have:
 TODO: Default outbound master password is in use
 TODO: create own certs for secure port
 TODO: Unit test framework integration (check https://github.com/SoftwareAG/webm-containers-devops)
+TODO: Be able to edit customer.properties + licence file (via cloudshell?)

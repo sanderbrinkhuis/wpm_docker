@@ -9,6 +9,7 @@ USER sagadmin
 RUN wpm install -ws https://packages.webmethods.io -wr licensed -j ${SAG_TOKEN} WmJDBCAdapter
 
 RUN wpm install -r customer_git wmp_sample2
+#RUN wpm install -r customer_git wmp_sample3
 #RUN wpm install -r bitbucket DMG_Utils
 
 RUN rm /opt/softwareag/wpm/wpm.yml # delete the files since it contains credentials
