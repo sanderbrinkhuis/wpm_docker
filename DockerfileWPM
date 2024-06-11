@@ -10,15 +10,16 @@ USER root
 #RUN apk add wget unzip openssl efs-utils # this is for Alpine base image
 RUN microdnf install wget unzip openssl -y # this for for UBI base image
 # Download, unzip, and copy wpm.zip
-RUN mkdir -p /opt/softwareag/wpm && \
-    wget -O /tmp/wpm.zip https://softwareag-usa.s3.amazonaws.com/webMethods/Service+Designer/wpm.zip && \
-    unzip /tmp/wpm.zip -d /opt/softwareag/wpm && \
+RUN wget -O /tmp/wpm.zip https://softwareag-usa.s3.amazonaws.com/webMethods/Service+Designer/wpm.zip && \
+    unzip /tmp/wpm.zip -d /opt/softwareag && \
     rm /tmp/wpm.zip
 # Add the application files and set PATH
 ADD --chown=sagadmin:sagadmin wpm /opt/softwareag/wpm
 ENV PATH=/opt/softwareag/wpm/bin:$PATH
 
 # Switch to non-root user
+
+
 USER sagadmin
 # Set environment variable for truststore password
 # ARG TRUSTSTORE_PASSWORD
