@@ -11,7 +11,7 @@ docker context use rancher-desktop
 #docker build -t is-wpm:10.15 -f DockerfileWPM . --platform=linux/amd64
 docker build -t is-wpm:10.15 -f DockerfileWPM . --platform=linux/amd64 --build-arg TRUSTSTORE_PASSWORD=changeit --progress=plain
 # no cache because there could be changes in other git repo's used by wpm
-docker build --build-arg="SAG_TOKEN=${SAG_TOKEN}" --no-cache -t is-run:10.15 -f DockerfileRUN . --platform=linux/amd64
+docker build --build-arg="SAG_TOKEN=${SAG_TOKEN}" --no-cache -t is-run:10.15 -f DockerfileRUN . --platform=linux/amd64  --progress=plain
 
 # docker run -d --name is -p 5556:5555 -v /Users/lennertbrinkhuis/WmGits/wpm_docker/customapp.properties:/opt/data/customapp.properties -e SAG_IS_CONFIG_PROPERTIES=/opt/data/customapp.properties is-run:10.15
 # docker run -d --name is -p 5556:5555 is-run:10.15
